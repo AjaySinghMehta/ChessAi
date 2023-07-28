@@ -2,13 +2,15 @@ import pygame
 from const import *
 from board import Board
 from square import Square
+from dragger import Dragger
 
 class Game:
 
     def __init__(self):
         self.board = Board()
+        self.dragger = Dragger()
 
-    # show methods
+    # sblit methods
 
     def show_bg(self, surface):
         for row in range(ROWS):
@@ -21,7 +23,7 @@ class Game:
                 rect = (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE)
 
                 pygame.draw.rect(surface, color, rect)
-
+    
     def show_pieces(self, surface):
         for row in range(ROWS):
             for col in range(COLS):
