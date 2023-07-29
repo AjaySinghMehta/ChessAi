@@ -94,40 +94,83 @@ class Board:
                         
                         piece.add_move(move)
         
+        def straightline_moves(incrs):
+            for incr in incrs:
+                row_incr, col_incr = incr
+                possible_move_row = row + row_incr
+                possible_move_col = col + col_incr
+                
+                while True:
+                    if Square.in_range(possible_move_row, possible_move_col):
+                        
+                        initial = Square(row,col)
+                        final = Square(possible_move_row, possible_move_col)
+                        
+                        #creating new move 
+                        move = Move(initial, final)
+                        
+                        #empty then continue
+                        if self.squares[possible_move_row][possible_move_col].isempty():
+                            # append a new move
+                            piece.add_move(move)
+                        
+                        # has enemy piece the move plus break
+                        if self.squares[possible_move_row][possible_move_col].has_enemy_piece(piece.color):
+                            # append a new move
+                            piece.add_move(move)
+                            break
+                        
+                        # has our own piece then break
+                        if self.squares[possible_move_row][possible_move_col].has_team_piece(piece.color):
+                            break
+                    # not in range
+                    else:
+                        break
+                    #incrementing incrs    
+                    possible_move_row = possible_move_row + row_incr 
+                    possible_move_col = possible_move_col + col_incr
+                        
+                
+       
         
         
-        def bishop_moves(): 
+        
+        if isinstance(piece, Pawn): 
+            pawn_moves()
+        
+        elif isinstance(piece, Knight):
+            knight_moves()
+        
+        elif isinstance(piece, Bishop):
+            straightline_moves([
+                (-1,1),  # up-right
+                (-1,-1),  # up-left
+                (1,1),  # down-right
+                (1,-1)  # down-left
+            ])
+        
+        elif isinstance(piece, Rook):
+            straightline_moves([
+                (-1,0), #up
+                (0,-1), #left
+                (1,0), #down
+                (0,1) # right
+            ])
+        
+        elif isinstance(piece, Queen):
+            straightline_moves([
+                (-1,0), #up
+                (0,-1), #left
+                (1,0), #down 
+                (0,1), # right
+                (-1,1),  # up-right
+                (-1,-1),  # up-left
+                (1,1),  # down-right
+                (1,-1)  # down-left
+            ])
+        
+        elif isinstance(piece, King):
             pass
-        
-        
-        
-        def rook_moves():
-            pass
-        
-        
-        
-        def queen_moves():
-            pass
-        
-        
-        
-        def king_moves(): 
-            pass
-        
-        
-        
-        
-        if isinstance(piece, Pawn): pawn_moves()
-        
-        if isinstance(piece, Knight):knight_moves()
-        
-        if isinstance(piece, Bishop): pass
-        
-        if isinstance(piece, Rook): pass
-        
-        if isinstance(piece, Queen): pass
-        
-        if isinstance(piece, King): pass
     
     def _create(self):
         for row in range(ROWS):
@@ -141,7 +184,7 @@ class Board:
         for col in range(COLS):
             #pawns
             self.squares[row_pawn][col] = Square(row_pawn, col, Pawn(color) )
-            
+    
         #knights
         self.squares[row_other][1] = Square(row_other, 1, Knight(color))
         self.squares[row_other][6] = Square(row_other, 6, Knight(color))
@@ -149,13 +192,14 @@ class Board:
         #bishops
         self.squares[row_other][2] = Square(row_other, 2, Bishop(color))
         self.squares[row_other][5] = Square(row_other, 5, Bishop(color))
+      
             
         #rooks
         self.squares[row_other][0] = Square(row_other, 0, Rook(color))
         self.squares[row_other][7] = Square(row_other, 7, Rook(color))
-            
+       
         #Queen
         self.squares[row_other][3] = Square(row_other, 0, Queen(color))
-            
+        
         #King
         self.squares[row_other][4] = Square(row_other, 4, King(color))
