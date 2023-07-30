@@ -1,5 +1,9 @@
+""" libraries"""
+
 import pygame
 import sys
+
+""" classes"""
 
 from const import *
 from game import Game
